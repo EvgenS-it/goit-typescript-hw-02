@@ -1,0 +1,20 @@
+.btnContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.moreBtn {
+  width: auto;
+  height: 32px;
+  background-color: #155e88;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.moreBtn:hover {
+  background-color: #3386b7;
+}

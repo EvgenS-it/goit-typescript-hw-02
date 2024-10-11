@@ -1,0 +1,11 @@
+.galeryList {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.cardItem {
+}
