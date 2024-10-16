@@ -1,23 +1,24 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import SearchBar from './SearchBar/SearchBar.jsx';
-import requestImages from '../services/api.js';
-import ImageGallery from './ImageGallery/ImageGallery.jsx';
-import Loader from './Loader/Loader.jsx';
-import ErrorMessage from './ErrorMessage/ErrorMessage.jsx';
-import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn.jsx';
-import ImageModal from './ImageModal/ImageModal.jsx';
+import SearchBar from '../SearchBar/SearchBar';
+import requestImages from '../../services/api';
+import ImageGallery from '../ImageGallery/ImageGallery';
+import Loader from '../Loader/Loader.jsx';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
+import ImageModal from '../ImageModal/ImageModal';
 import { Toaster } from 'react-hot-toast';
+import { Image } from './App.types';
 
 function App() {
-  const [images, setImages] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [query, setQuery] = useState(null);
-  const [totalPages, setTotalPages] = useState(0);
-  const [page, setPage] = useState(1);
-  const [modalImage, setModalImage] = useState({});
-  const [openModal, setOpenModal] = useState(false);
+  const [images, setImages] = useState<Image[] | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+  const [modalImage, setModalImage] = useState<object>({});
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (query === null) return;
@@ -27,12 +28,13 @@ function App() {
         setError(null);
         setIsLoading(true);
         const data = await requestImages(query, page);
+        console.log('data:', data);
         setImages(prevImages => [...prevImages, ...data.results]);
 
         setTotalPages(data.total_pages);
       } catch (err) {
         setError(err.message);
-        console.log(err.message);
+        console.log(`MY ERROR =======> ${err.message}`);
       } finally {
         setIsLoading(false);
       }
@@ -41,7 +43,7 @@ function App() {
     fetchImages();
   }, [query, page]);
 
-  const onSearch = searchTerm => {
+  const onSearch = (searchTerm: string): void => {
     setError(null);
     setImages([]);
     setQuery(searchTerm);
@@ -50,7 +52,8 @@ function App() {
 
   const onLoadMore = () => setPage(prevPage => prevPage + 1);
 
-  const handleOpenModal = currentId => {
+  const handleOpenModal = (currentId: string) => {
+    if (images === null) return;
     const [currentImg] = images.filter(({ id }) => id === currentId);
     setModalImage(currentImg);
     setOpenModal(!openModal);
